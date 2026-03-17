@@ -3,51 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مكتب العدالة الذكي</title>
+    <title>مكتب العدالة الذكي | JUSTICE OFFICE</title>
     <style>
-        :root { --primary: #001f3f; --gold: #d4af37; --bg: #f4f7f9; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        .header { background: var(--primary); color: white; padding: 15px; text-align: center; border-bottom: 4px solid var(--gold); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        #chat-window { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: white; margin: 10px; border-radius: 15px; }
-        .bubble { padding: 12px 18px; border-radius: 15px; max-width: 80%; font-size: 16px; line-height: 1.6; position: relative; }
-        .ai { align-self: flex-start; background: #e8ecef; border-right: 5px solid var(--gold); color: #333; }
-        .user { align-self: flex-end; background: var(--primary); color: white; border-left: 5px solid var(--gold); }
-        .payment-box { display: none; background: #fff3cd; border: 2px dashed #856404; padding: 15px; margin: 10px; border-radius: 10px; text-align: center; animation: fadeIn 0.5s; }
-        .whatsapp-btn { display: block; background: #25d366; color: white; padding: 12px; border-radius: 30px; text-decoration: none; margin-top: 10px; font-weight: bold; font-size: 16px; transition: 0.3s; }
-        .whatsapp-btn:hover { background: #128c7e; transform: scale(1.05); }
-        .input-area { padding: 20px; background: white; display: flex; gap: 10px; border-top: 1px solid #ddd; }
-        input { flex: 1; padding: 15px; border: 2px solid #eee; border-radius: 30px; outline: none; font-size: 16px; transition: 0.3s; }
-        input:focus { border-color: var(--gold); }
-        button { background: var(--gold); color: white; border: none; padding: 0 25px; border-radius: 30px; cursor: pointer; font-weight: bold; font-size: 16px; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        :root { --dark: #0a0a0a; --gold: #c5a059; --gray: #1a1a1a; --text: #e0e0e0; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: var(--text); margin: 0; overflow: hidden; }
+        
+        /* التنقل بين الصفحات */
+        .page { display: none; height: 100vh; flex-direction: column; animation: fadeIn 0.5s ease; }
+        .active { display: flex; }
+
+        /* الصفحة الأولى: الاستقبال */
+        .hero { justify-content: center; align-items: center; text-align: center; padding: 20px; }
+        .hero h1 { color: var(--gold); font-size: 2.5em; margin-bottom: 10px; }
+        .hero p { font-size: 1.2em; margin-bottom: 30px; }
+        .start-btn { background: var(--gold); color: black; padding: 15px 40px; border-radius: 30px; font-weight: bold; cursor: pointer; border: none; font-size: 1.1em; }
+
+        /* الصفحة الثانية: الشات */
+        .header { background: var(--gray); padding: 15px; text-align: center; border-bottom: 2px solid var(--gold); }
+        #chat-window { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: #000; }
+        .bubble { padding: 15px; border-radius: 12px; max-width: 85%; font-size: 16px; line-height: 1.6; }
+        .ai { align-self: flex-start; background: var(--gray); border-right: 4px solid var(--gold); }
+        .user { align-self: flex-end; background: var(--gold); color: black; font-weight: 500; }
+
+        /* صندوق الدفع */
+        .payment-box { display: none; background: #1a1500; border: 1px solid var(--gold); padding: 15px; margin: 10px; border-radius: 10px; text-align: center; }
+        .whatsapp-btn { display: block; background: #25d366; color: white; padding: 12px; border-radius: 25px; text-decoration: none; margin-top: 10px; font-weight: bold; }
+
+        /* منطقة الإدخال */
+        .input-area { padding: 15px; background: var(--gray); display: flex; gap: 10px; border-top: 1px solid #333; }
+        input { flex: 1; padding: 12px; border: 1px solid #444; border-radius: 25px; background: #000; color: white; outline: none; }
+        button { background: var(--gold); color: black; border: none; padding: 0 25px; border-radius: 25px; cursor: pointer; font-weight: bold; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
-    <div class="header"><h1>⚖️ مكتب العدالة الذكي</h1></div>
-    <div id="chat-window">
-        <div class="bubble ai">مرحباً بك في مكتب العدالة.. أنا مستشارك القانوني الذكي. تفضل بطرح سؤالك وسأقوم بالرد عليك فوراً.</div>
+
+    <div id="home" class="page active hero">
+        <h1>⚖️ مكتب العدالة</h1>
+        <p>مستشارك القانوني الذكي متاح 24 ساعة لخدمتك</p>
+        <button class="start-btn" onclick="showChat()">ابدأ الاستشارة الآن</button>
     </div>
-    <div id="payment-notice" class="payment-box">
-        ⚠️ تم تجهيز الرد القانوني التفصيلي. لإرسال المذكرة الكاملة، يرجى تحويل مبلغ <strong>150 ج.م</strong> لـ:
-        <br><strong style="font-size: 1.4em; color: #000;">01008293246</strong>
-        <a href="https://wa.me/201008293246?text=تم%20التحويل%20بمبلغ%20150%20جنيه" class="whatsapp-btn">إرسال إيصال التحويل (واتساب) ✅</a>
-    </div>
-    <div class="input-area">
-        <input type="text" id="userInput" placeholder="اسأل سؤالك القانوني هنا...">
-        <button onclick="askAI()">إرسال</button>
+
+    <div id="chat-page" class="page">
+        <div class="header"><h3>المحامي الذكي</h3></div>
+        <div id="chat-window">
+            <div class="bubble ai">مرحباً بك.. صف لي مشكلتك القانونية باختصار.</div>
+        </div>
+        <div id="pay-box" class="payment-box">
+            ✅ تم تجهيز الرد القانوني. للحصول على المذكرة، حول 150ج لـ:
+            <br><strong style="font-size: 1.3em; color: var(--gold);">01008293246</strong>
+            <a href="https://wa.me/201008293246?text=تم%20التحويل" class="whatsapp-btn">تأكيد التحويل (واتساب)</a>
+        </div>
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="اكتب سؤالك هنا...">
+            <button onclick="askAI()">إرسال</button>
+        </div>
     </div>
 
 <script>
-    // مفتاح الربط الجديد (تم تصحيحه وتفعيله)
-    const API_KEY = "AIzaSyCNhRo9Hb0JJbEyoPhBFYtl2fQK4Zzkb6I"; 
-    
+    function showChat() {
+        document.getElementById('home').classList.remove('active');
+        document.getElementById('chat-page').classList.add('active');
+    }
+
+    const API_KEY = "AIzaSyCNhRo9Hb0JJbEyoPhBFYtl2fQK4Zzkb6I";
+
     async function askAI() {
         const input = document.getElementById('userInput');
         const windowChat = document.getElementById('chat-window');
-        const payNotice = document.getElementById('payment-notice');
+        const payBox = document.getElementById('pay-box');
         const text = input.value.trim();
-        
-        if (!text) return;
+        if(!text) return;
 
         windowChat.innerHTML += `<div class="bubble user">${text}</div>`;
         input.value = "";
@@ -56,18 +83,18 @@
         try {
             const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: "أنت محامي مصري خبير. قدم نصيحة قانونية مختصرة جداً وباللهجة المصرية المحترمة، ثم اطلب التحويل لـ 01008293246. السؤال: " + text }] }] })
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ contents: [{ parts: [{ text: "أنت محامي مصري خبير جداً، قدم رداً قانونياً مبهراً ومختصراً جداً باللهجة المصرية. السؤال: " + text }] }] })
             });
             const data = await res.json();
             const aiText = data.candidates[0].content.parts[0].text;
             
             windowChat.innerHTML += `<div class="bubble ai">${aiText}</div>`;
-            payNotice.style.display = "block";
-            windowChat.scrollTop = windowChat.scrollHeight;
+            payBox.style.display = "block";
         } catch (e) {
-            windowChat.innerHTML += `<div class="bubble ai">عذراً، يرجى تحديث الصفحة والمحاولة مرة أخرى.</div>`;
+            windowChat.innerHTML += `<div class="bubble ai">توجد ضغوط على السيرفر، جاري المحاولة مرة أخرى..</div>`;
         }
+        windowChat.scrollTop = windowChat.scrollHeight;
     }
 </script>
 </body>
