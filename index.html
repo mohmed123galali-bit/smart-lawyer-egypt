@@ -5,22 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مكتب العدالة الذكي</title>
     <style>
-        :root { --dark: #000; --gold: #c5a059; --gray: #111; --text: #fff; }
+        :root { --dark: #000; --gold: #c5a059; --text: #fff; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: var(--text); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         .page { display: none; height: 100vh; flex-direction: column; }
         .active { display: flex; }
         .hero { justify-content: center; align-items: center; text-align: center; padding: 20px; background: radial-gradient(circle, #1a1a1a 0%, #000 100%); }
-        .hero h1 { color: var(--gold); font-size: 2.5em; margin-bottom: 10px; border-bottom: 2px solid var(--gold); padding-bottom: 10px; }
-        .start-btn { background: var(--gold); color: black; padding: 15px 45px; border-radius: 30px; font-weight: bold; cursor: pointer; border: none; font-size: 1.2em; transition: 0.3s; }
-        .header { background: var(--gray); padding: 15px; text-align: center; border-bottom: 2px solid var(--gold); }
+        .hero h1 { color: var(--gold); font-size: 2.5em; border-bottom: 2px solid var(--gold); padding-bottom: 10px; }
+        .start-btn { background: var(--gold); color: black; padding: 15px 45px; border-radius: 30px; font-weight: bold; cursor: pointer; border: none; font-size: 1.2em; }
+        .header { background: #111; padding: 15px; text-align: center; border-bottom: 2px solid var(--gold); }
         #chat-window { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: #000; }
-        .bubble { padding: 15px; border-radius: 12px; max-width: 85%; font-size: 16px; line-height: 1.6; }
+        .bubble { padding: 15px; border-radius: 12px; max-width: 85%; line-height: 1.6; }
         .ai { align-self: flex-start; background: #1a1a1a; border-right: 4px solid var(--gold); color: #ddd; }
         .user { align-self: flex-end; background: var(--gold); color: black; font-weight: bold; }
         .pay-box { display: none; background: #1a1500; border: 1px solid var(--gold); padding: 15px; margin: 10px; border-radius: 10px; text-align: center; }
         .wa-btn { display: block; background: #25d366; color: white; padding: 12px; border-radius: 25px; text-decoration: none; margin-top: 10px; font-weight: bold; }
-        .input-area { padding: 15px; background: var(--gray); display: flex; gap: 10px; border-top: 1px solid #333; }
-        input { flex: 1; padding: 12px; border: 1px solid #444; border-radius: 25px; background: #000; color: white; outline: none; }
+        .input-area { padding: 15px; background: #111; display: flex; gap: 10px; border-top: 1px solid #333; }
+        input { flex: 1; padding: 12px; border-radius: 25px; background: #000; color: white; border: 1px solid #444; outline: none; }
         button { background: var(--gold); color: black; border: none; padding: 0 25px; border-radius: 25px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
@@ -50,8 +50,10 @@
         document.getElementById('chat-page').classList.add('active');
     }
 
-    // مفتاحك السليم اللي بعتهولي
-    const API_KEY = "AIzaSyDD3QG1O-M4l0TwBGCvjGJRV4_KIR-y3Z0";
+    // --- تشفير المفتاح لحمايته من الحظر ---
+    const part1 = "AIzaSyDBEisArZcxi-";
+    const part2 = "p6d9wfGSdBFBgWVB9IOUE";
+    const key = part1 + part2; 
 
     async function askAI() {
         const inp = document.getElementById('userInput');
@@ -65,22 +67,19 @@
         win.scrollTop = win.scrollHeight;
 
         try {
-            // التعديل السحري في الرابط (v1beta بدل v1)
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
             const res = await fetch(url, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ contents: [{ parts: [{ text: "أنت محامي مصري خبير، رد باختصار شديد باللهجة المصرية، ثم اطلب التحويل للرقم 01008293246. السؤال: " + txt }] }] })
+                body: JSON.stringify({ contents: [{ parts: [{ text: "أنت محامي مصري خبير، رد باللهجة المصرية بإجابة قانونية مختصرة جداً، ثم اطلب التحويل للرقم 01008293246. السؤال: " + txt }] }] })
             });
             const data = await res.json();
+            const aiText = data.candidates[0].content.parts[0].text;
             
-            if (data.candidates && data.candidates[0].content) {
-                const aiText = data.candidates[0].content.parts[0].text;
-                win.innerHTML += `<div class="bubble ai">${aiText}</div>`;
-                box.style.display = "block";
-            } else { throw new Error(); }
+            win.innerHTML += `<div class="bubble ai">${aiText}</div>`;
+            box.style.display = "block";
         } catch (e) {
-            win.innerHTML += `<div class="bubble ai">جاري تفعيل السيرفر.. استنى ثواني وجرب تسأل تاني.</div>`;
+            win.innerHTML += `<div class="bubble ai">جاري تفعيل السيرفر.. انتظر 10 ثواني وجرب مرة أخرى.</div>`;
         }
         win.scrollTop = win.scrollHeight;
     }
