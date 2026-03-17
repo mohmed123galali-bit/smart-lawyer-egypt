@@ -5,68 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مكتب العدالة الذكي | JUSTICE OFFICE</title>
     <style>
-        :root { --dark: #0a0a0a; --gold: #c5a059; --gray: #1a1a1a; --text: #e0e0e0; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: var(--text); margin: 0; overflow: hidden; }
+        :root { --dark: #000000; --silver: #c0c0c0; --accent: #1a1a1a; --text: #ffffff; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: var(--text); margin: 0; display: flex; flex-direction: column; height: 100vh; }
         
-        /* التنقل بين الصفحات */
-        .page { display: none; height: 100vh; flex-direction: column; animation: fadeIn 0.5s ease; }
-        .active { display: flex; }
+        .header { background: var(--accent); padding: 20px; text-align: center; border-bottom: 2px solid var(--silver); box-shadow: 0 5px 15px rgba(255,255,255,0.05); }
+        .header h1 { margin: 0; color: var(--silver); font-size: 1.5em; letter-spacing: 2px; }
 
-        /* الصفحة الأولى: الاستقبال */
-        .hero { justify-content: center; align-items: center; text-align: center; padding: 20px; }
-        .hero h1 { color: var(--gold); font-size: 2.5em; margin-bottom: 10px; }
-        .hero p { font-size: 1.2em; margin-bottom: 30px; }
-        .start-btn { background: var(--gold); color: black; padding: 15px 40px; border-radius: 30px; font-weight: bold; cursor: pointer; border: none; font-size: 1.1em; }
+        #chat-window { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: radial-gradient(circle, #111 0%, #000 100%); }
+        .bubble { padding: 15px; border-radius: 12px; max-width: 85%; font-size: 16px; line-height: 1.6; animation: slideIn 0.3s ease; }
+        .ai { align-self: flex-start; background: var(--accent); border-right: 3px solid var(--silver); color: #ddd; }
+        .user { align-self: flex-end; background: #fff; color: #000; font-weight: bold; }
 
-        /* الصفحة الثانية: الشات */
-        .header { background: var(--gray); padding: 15px; text-align: center; border-bottom: 2px solid var(--gold); }
-        #chat-window { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: #000; }
-        .bubble { padding: 15px; border-radius: 12px; max-width: 85%; font-size: 16px; line-height: 1.6; }
-        .ai { align-self: flex-start; background: var(--gray); border-right: 4px solid var(--gold); }
-        .user { align-self: flex-end; background: var(--gold); color: black; font-weight: 500; }
-
-        /* صندوق الدفع */
-        .payment-box { display: none; background: #1a1500; border: 1px solid var(--gold); padding: 15px; margin: 10px; border-radius: 10px; text-align: center; }
+        .payment-box { display: none; background: #1a1a1a; border: 1px dashed var(--silver); padding: 15px; margin: 10px; border-radius: 10px; text-align: center; }
         .whatsapp-btn { display: block; background: #25d366; color: white; padding: 12px; border-radius: 25px; text-decoration: none; margin-top: 10px; font-weight: bold; }
 
-        /* منطقة الإدخال */
-        .input-area { padding: 15px; background: var(--gray); display: flex; gap: 10px; border-top: 1px solid #333; }
-        input { flex: 1; padding: 12px; border: 1px solid #444; border-radius: 25px; background: #000; color: white; outline: none; }
-        button { background: var(--gold); color: black; border: none; padding: 0 25px; border-radius: 25px; cursor: pointer; font-weight: bold; }
+        .input-area { padding: 20px; background: var(--accent); display: flex; gap: 10px; border-top: 1px solid #333; }
+        input { flex: 1; padding: 15px; border: 1px solid #444; border-radius: 30px; background: #000; color: white; outline: none; font-size: 16px; }
+        button { background: var(--silver); color: black; border: none; padding: 0 25px; border-radius: 30px; cursor: pointer; font-weight: bold; }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <div id="home" class="page active hero">
-        <h1>⚖️ مكتب العدالة</h1>
-        <p>مستشارك القانوني الذكي متاح 24 ساعة لخدمتك</p>
-        <button class="start-btn" onclick="showChat()">ابدأ الاستشارة الآن</button>
+    <div class="header"><h1>⚖️ JUSTICE OFFICE</h1></div>
+    
+    <div id="chat-window">
+        <div class="bubble ai">مرحباً بك في مكتب العدالة.. أنا مستشارك الذكي، كيف يمكنني مساعدتك قانونياً اليوم؟</div>
     </div>
 
-    <div id="chat-page" class="page">
-        <div class="header"><h3>المحامي الذكي</h3></div>
-        <div id="chat-window">
-            <div class="bubble ai">مرحباً بك.. صف لي مشكلتك القانونية باختصار.</div>
-        </div>
-        <div id="pay-box" class="payment-box">
-            ✅ تم تجهيز الرد القانوني. للحصول على المذكرة، حول 150ج لـ:
-            <br><strong style="font-size: 1.3em; color: var(--gold);">01008293246</strong>
-            <a href="https://wa.me/201008293246?text=تم%20التحويل" class="whatsapp-btn">تأكيد التحويل (واتساب)</a>
-        </div>
-        <div class="input-area">
-            <input type="text" id="userInput" placeholder="اكتب سؤالك هنا...">
-            <button onclick="askAI()">إرسال</button>
-        </div>
+    <div id="pay-box" class="payment-box">
+        ✅ تم تجهيز الرد القانوني الوافي. للحصول عليه فوراً، يرجى تحويل <strong>150 ج.م</strong> لـ:
+        <br><strong style="font-size: 1.3em; color: var(--silver);">01008293246</strong>
+        <a href="https://wa.me/201008293246?text=تم%20التحويل%20للمحامي%20الذكي" class="whatsapp-btn">تأكيد التحويل (واتساب)</a>
+    </div>
+
+    <div class="input-area">
+        <input type="text" id="userInput" placeholder="اسأل سؤالك القانوني هنا...">
+        <button onclick="askAI()">إرسال</button>
     </div>
 
 <script>
-    function showChat() {
-        document.getElementById('home').classList.remove('active');
-        document.getElementById('chat-page').classList.add('active');
-    }
-
     const API_KEY = "AIzaSyCNhRo9Hb0JJbEyoPhBFYtl2fQK4Zzkb6I";
 
     async function askAI() {
@@ -84,7 +63,7 @@
             const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ contents: [{ parts: [{ text: "أنت محامي مصري خبير جداً، قدم رداً قانونياً مبهراً ومختصراً جداً باللهجة المصرية. السؤال: " + text }] }] })
+                body: JSON.stringify({ contents: [{ parts: [{ text: "أنت محامي مصري خبير، رد باللهجة المصرية المحترمة بإجابة قانونية مختصرة جداً، ثم اطلب التحويل. السؤال: " + text }] }] })
             });
             const data = await res.json();
             const aiText = data.candidates[0].content.parts[0].text;
@@ -92,7 +71,7 @@
             windowChat.innerHTML += `<div class="bubble ai">${aiText}</div>`;
             payBox.style.display = "block";
         } catch (e) {
-            windowChat.innerHTML += `<div class="bubble ai">توجد ضغوط على السيرفر، جاري المحاولة مرة أخرى..</div>`;
+            windowChat.innerHTML += `<div class="bubble ai">نعتذر، السيرفر مشغول حالياً. يرجى إعادة المحاولة بعد ثوانٍ.</div>`;
         }
         windowChat.scrollTop = windowChat.scrollHeight;
     }
